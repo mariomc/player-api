@@ -1,5 +1,3 @@
-alert('Remove this line before using in production!');
-
 // Init style shamelessly stolen from jQuery http://jquery.com
 var Froogaloop = (function(){
     // Define a local copy of Froogaloop
@@ -25,8 +23,7 @@ var Froogaloop = (function(){
             this.element = iframe;
 
             // Register message event listeners
-            playerDomain = getDomainFromUrl(this.element.getAttribute('src'));
-
+            playerDomain = getDomainFromUrl(this.element.src);
             return this;
         },
 
@@ -123,7 +120,7 @@ var Froogaloop = (function(){
             return false;
         }
 
-        var url = target.getAttribute('src').split('?')[0],
+        var url = target.src.split('?')[0],
             data = JSON.stringify({
                 method: method,
                 value: params
@@ -131,6 +128,8 @@ var Froogaloop = (function(){
 
         if (url.substr(0, 2) === '//') {
             url = window.location.protocol + url;
+        } else if(url.substr(0, 1) === '/') {
+            url = window.location.protocol + '//' + window.location.host + url;
         }
 
         target.contentWindow.postMessage(data, url);
@@ -249,6 +248,8 @@ var Froogaloop = (function(){
     function getDomainFromUrl(url) {
         if (url.substr(0, 2) === '//') {
             url = window.location.protocol + url;
+        } else if(url.substr(0, 1) === '/') {
+            url = window.location.protocol + '//' + window.location.host + url;
         }
 
         var url_pieces = url.split('/'),
